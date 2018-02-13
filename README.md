@@ -1,5 +1,14 @@
 # NCT375_reak_envsens
-Enviromental BLE temperature sensor
+Environmental BLE temperature sensor
+
+Used components:
+----------------
+- SW RSL10 Evalution & Development Tools V1.4
+- HW RSL10 QFN EVB V1.1
+- Android mobile device with installed android APK from LAPIS named BLE Tool
+- Temperature sensor NCT375 with I2C slave interface 
+
+<img src="screenshots/shown_temperature_2.PNG"/>
 
 2018.02.12
 There is nct375.h header file inside the NCT375_reak_envsens project. It contains two macro definition:
@@ -45,3 +54,6 @@ OR
 //#define FULL_POWER_MODE
 ```
 
+## Connection state between BLE device and RSL10 board, shown temperature.
+
+<img src="screenshots/shown_temperature.PNG"/>
