@@ -1,0 +1,114 @@
+    REAK Peripheral Server Example - Environment Temperatire Sensing  
+    ====================================================================
+
+NOTE: If you use this sample application for your own purposes, follow
+      the licensing agreement specified in Software_Use_Agreement.rtf
+      in the home directory of the installed RSL10 Evaluation and
+      Development Kit (EDK).
+
+Overview
+--------
+This sample project demonstrates the usage of REAK - the RSL10 Express Adoption
+Kit - to build a BLE peripheral server application. The sample project 
+generates an envioronment sensing service and a custom service. It then starts  
+an undirected connectable advertising with the device's public address if an  
+address is available at DEVICE_INFO_BLUETOOTH_ADDR in non-volatile memory three 
+(NVR3). If this address is not defined (all 1s or 0s), use a pre-defined, 
+private Bluetooth(R) address (PRIVATE_BDADDR) located in ble_std.h.
+
+For this sample project, any central device can scan, connect, and perform 
+service discovery, receive environment data notifications (temperature and 
+humidity data provided by a SI7042 sensor). The central device has the ability 
+to read and write custom characteristics linked to the RSL10 RSSI and TX power 
+registers.
+
+A kernel timer event is used to control every 200 ms the LED status and to 
+read every 5 seconds the temperature and humidity data and to update the
+RSSI level. Notifications are sent if the temperature, humidity or RSSI level 
+change and if the corresponding notification is enabled.
+
+This sample project has some states before all services are enabled. These
+are as follows: initialization (APPM_INIT), create database (APPM_CREATE_DB),
+ready (APPM_READY), advertising (APPM_ADVERTISING), and connected 
+(APPM_CONNECTED). Once the state APPM_CONNECTED is reached, the application 
+starts sending nofifications.
+
+Code
+----
+
+The BLE STD (STANDARD) and REAK libraries hide all lower level BLE operations  
+from the customer and application specific BLE functionalities and definitions.
+The standard library (ble_std.h, ble_std.c) implement the BLE base operations
+to create connections, perform advertisment, building the attribute database, 
+etc. The REAK library (ble_reak.h, ble_reak.c) provides a framework to build in 
+a convinient way BLE services.
+
+The proper application is organized in various files: App.c contains the main 
+application that includes the main() function and the function called by the 
+kernel timer event. App_system.c/h contains functionalities to initialize the 
+system and task scheduler. App_ble.c/h contains the application specific BLE
+definitions and functionalities.            
+
+This sample project is structured as follows:
+
+The source code exists in a "code" folder, all application-related include
+header files are in the "include" folder and the main application file "app.c"  
+is located in the parent directory.
+
+    app_system.c  - System initialization functions
+    app_ble.c     - Application specific BLE functionalities and service 
+                    definitions
+    ble_reak.c    - REAK framework that allows bulding BLE services
+    ble_std.c     - Support functions and message handlers pertaining to
+                    Bluetooth low energy technology
+    i2c.c         - I2C high-level communication command library
+
+Include
+-------
+    app.h         - Overall application header file
+    app_system.h  - Header file for the system initialization functions
+    app_ble.c     - Header file for app_ble.c, contains application specific
+                    BLE definitions
+    ble_reak.c    - Header file for the REAK framework
+    ble_std.h     - Header file for Bluetooth low energy standard
+    i2c.c         - Header file for I2C high-level communication command library
+
+Hardware Requirements
+---------------------
+This application can be executed on any Evaluation and Development Board. A 
+NCT375 sensor that provides temperature data has to be connected 
+to the following DIOs:      
+
+   SDA - DIO_12
+   SCL - DIO_11
+
+
+Importing a Project
+-------------------
+In order to import the sample code into the Evaluation Development Kit (EDK),
+refer to the RSL10 Software Development Tools User's Guide for more information.
+
+Select the project configuration according to the chip ID version of  
+RSL10. The appropriate libraries and include files are loaded according to 
+the build configuration that you choose. Use "Debug" for CID 101 or "Debug8102"
+for CID 8102. Ensure that the device CID matches the application build.
+
+Verification
+------------
+To verify if this application is functioning correctly, use RSL10 or another 
+third-party central device application to establish a connection. 
+In addition to establishing a connection, this application can be used to 
+read/write characteristics and receive notifications.
+
+To show how an application can send notifications, for every 30 timer 
+expirations, a notification request flag is set and the application sends an 
+incremental value of the first attribute to a peer device.
+
+Alternatively, while the Bluetooth application manager is in the state 
+"APPM_ADVERTISING", the LED on the evaluation board (DIO#6) is blinking and
+it turns on steadily once the link is established and it goes to the 
+APPM_CONNECTED state.
+
+===============================================================================
+Copyright (c) 2017 Semiconductor Components Industries, LLC
+(d/b/a ON Semiconductor).
